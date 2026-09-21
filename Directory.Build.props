@@ -21,7 +21,7 @@
     <!-- Zero-reflection / NativeAOT policy: AOT analyzers run on every shippable project.
          Test projects opt out (they legitimately reflect) via IsAotCompatible=false. -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
-    <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
     <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>

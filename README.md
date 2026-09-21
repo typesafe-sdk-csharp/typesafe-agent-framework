@@ -5,7 +5,6 @@
 [![NuGet Version](https://img.shields.io/nuget/v/TypeSafe.AI.AgentFramework.svg?style=flat&logo=nuget)](https://www.nuget.org/packages/TypeSafe.AI.AgentFramework)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![Microsoft Agents](https://img.shields.io/badge/Microsoft.Agents.AI-1.0.0--preview-blue)](https://github.com/microsoft/agents)
 
 Enterprise-ready **Microsoft Agent Framework (`Microsoft.Agents.AI` / `Microsoft.Extensions.AI`) integration for TypeSafe AI** — providing ultra-low latency probabilistic evaluations, deterministic routing, history-protected guardrails, pre-turn dynamic tool shortlisting, runtime tool expansion, and semantic skill discovery for modern agentic workflows.
 
