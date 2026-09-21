@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>TypeSafe.AI.AgentFramework</PackageId>
+    <Description>Microsoft Agent Framework classifier agent over trusted application-supplied TypeSafe questions.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>typesafe;ai;llm;guardrails;agent-framework;microsoft-agents;classification;routing</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="TypeSafe.AI" />
+    <PackageReference Include="MinVer" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Agents.AI" />
+    <PackageReference Include="Microsoft.Extensions.AI" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="TypeSafe.AI.AgentFramework.Tests" />
+  </ItemGroup>
+</Project>

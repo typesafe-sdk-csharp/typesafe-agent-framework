@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <!-- Public official NuGet feed (for stable/GA packages) -->
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+
+    <!-- GitHub Packages feed (for beta/preview builds) -->
+    <!-- Replace OWNER with your GitHub organization or username -->
+    <add key="github" value="https://nuget.pkg.github.com/OWNER/index.json" />
+  </packageSources>
+
+  <packageSourceCredentials>
+    <github>
+      <add key="Username" value="GITHUB_USERNAME" />
+      <!-- Set your GitHub Personal Access Token (PAT) with read:packages scope -->
+      <add key="ClearTextPassword" value="%GITHUB_TOKEN%" />
+    </github>
+  </packageSourceCredentials>
+</configuration>

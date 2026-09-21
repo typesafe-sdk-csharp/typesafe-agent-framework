@@ -1,0 +1,13 @@
+﻿# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Explicitly declare text files you want to always be normalized and not converted to CRLF on checkout.
+*.cs text diff=csharp
+*.csproj text
+*.sln text
+*.slnx text
+*.props text
+*.json text
+*.md text
+*.yml text
+*.yaml text

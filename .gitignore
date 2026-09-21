@@ -1,0 +1,34 @@
+﻿# Build and test outputs
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+*.nupkg
+*.snupkg
+
+# IDE and environment files
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Secrets & Environment Configurations
+.env
+.env.*
+!.env.example
+appsettings.*.json
+!appsettings.json
+secrets.json
+*.secrets.json
+*.pem
+*.key
+*.pfx
+*.cert
+*.token
+
+# OS files
+.DS_Store
+Thumbs.db

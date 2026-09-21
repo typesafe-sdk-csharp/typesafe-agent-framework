@@ -1,0 +1,132 @@
+name: Release GA
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: 'Release version tag to cut (e.g. v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-ga-package:
+    name: Build & Verify GA Package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release_tag: ${{ steps.tag_info.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine and Tag Release
+        id: tag_info
+        env:
+          INPUT_TAG: ${{ inputs.version_tag }}
+        run: |
+          if [ -n "$INPUT_TAG" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag -f "$INPUT_TAG"
+            git push -f origin "$INPUT_TAG"
+            git checkout "$INPUT_TAG"
+            echo "tag=$INPUT_TAG" >> $GITHUB_OUTPUT
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+            git checkout "$TAG"
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore, build, and test
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: Pack GA release package
+        run: dotnet pack src/TypeSafe.AI.AgentFramework/TypeSafe.AI.AgentFramework.csproj --configuration Release --no-build --output artifacts/ga-packages
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ga-packages-${{ github.run_number }}
+          path: artifacts/ga-packages/*
+          if-no-files-found: error
+
+  publish-nuget:
+    name: Deploy to NuGet (Human-in-the-Loop)
+    needs: build-ga-package
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.nuget.org/packages/TypeSafe.AI.AgentFramework
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: ga-packages-${{ github.run_number }}
+          path: artifacts/ga-packages
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Determine NuGet User
+        id: nuget_user
+        env:
+          VAR_USER: ${{ vars.NUGET_USERNAME }}
+          SECRET_USER: ${{ secrets.NUGET_USERNAME }}
+        run: |
+          RESOLVED_USER="${VAR_USER:-$SECRET_USER}"
+          echo "username=$RESOLVED_USER" >> $GITHUB_OUTPUT
+
+      - name: Log in to NuGet via OIDC (Trusted Publishing)
+        if: steps.nuget_user.outputs.username != ''
+        id: nuget_login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ steps.nuget_user.outputs.username }}
+
+      - name: Create GitHub Release and Deploy to NuGet
+        env:
+          TAG: ${{ needs.build-ga-package.outputs.release_tag }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY || secrets.NUGET_API_KEY }}
+          PACKAGE_OWNER: ${{ github.repository_owner }}
+        run: |
+          echo "==> Creating or updating GitHub Release for $TAG..."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; uploading artifacts..."
+            gh release upload "$TAG" artifacts/ga-packages/* --clobber || true
+          else
+            gh release create "$TAG" artifacts/ga-packages/* --generate-notes
+          fi
+
+          echo "==> Publishing to NuGet.org and GitHub Packages..."
+          for file in artifacts/ga-packages/*.nupkg; do
+            if [ -n "$NUGET_API_KEY" ]; then
+              dotnet nuget push "$file" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            else
+              echo "::error::Neither OIDC login nor NUGET_API_KEY provided a valid NuGet token! Aborting NuGet.org push."
+              exit 1
+            fi
+            dotnet nuget push "$file" --api-key "$GH_TOKEN" --source "https://nuget.pkg.github.com/${PACKAGE_OWNER}/index.json" --skip-duplicate
+          done

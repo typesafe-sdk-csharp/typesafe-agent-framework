@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <Description>TypeSafe AI: Reactive Runtime Tool Expansion (Ambient Loop Discovery).</Description>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TypeSafe.AI" />
+    <ProjectReference Include="../../src/TypeSafe.AI.AgentFramework/TypeSafe.AI.AgentFramework.csproj" />
+    <PackageReference Include="Microsoft.Agents.AI" />
+    <PackageReference Include="Microsoft.Extensions.AI" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
+    <PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+  <ItemGroup><Compile Include="../Shared/SampleSupport.cs" Link="SampleSupport.cs" /></ItemGroup>
+</Project>

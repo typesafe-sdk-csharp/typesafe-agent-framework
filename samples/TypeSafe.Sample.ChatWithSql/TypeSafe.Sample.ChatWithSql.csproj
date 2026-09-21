@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <Description>TypeSafe evaluation and context injection around a verified SQL tool.</Description>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/TypeSafe.AI.AgentFramework/TypeSafe.AI.AgentFramework.csproj" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
+    <PackageReference Include="Npgsql" />
+    <Compile Include="../Shared/SampleSupport.cs" Link="SampleSupport.cs" />
+    <None Update="init.sql" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="docker-compose.yml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

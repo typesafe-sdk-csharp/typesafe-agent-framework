@@ -1,0 +1,57 @@
+name: CI & Beta Preview
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'samples/**'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'samples/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  verify-and-publish-beta:
+    name: Build, Test, and Publish Beta
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      - name: Pack packages
+        run: dotnet pack src/TypeSafe.AI.AgentFramework/TypeSafe.AI.AgentFramework.csproj --configuration Release --no-build --output artifacts/packages
+
+      - name: Publish Beta preview to GitHub Packages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_OWNER: ${{ github.repository_owner }}
+        run: |
+          for file in artifacts/packages/*.nupkg; do
+            dotnet nuget push "$file" --api-key "$GH_TOKEN" --source "https://nuget.pkg.github.com/${PACKAGE_OWNER}/index.json" --skip-duplicate
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beta-packages-${{ github.run_number }}
+          path: artifacts/packages/*
+          if-no-files-found: error

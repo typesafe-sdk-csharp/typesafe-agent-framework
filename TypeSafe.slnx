@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TypeSafe.AI.AgentFramework/TypeSafe.AI.AgentFramework.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/TypeSafe.Sample.ToolSelection/TypeSafe.Sample.ToolSelection.csproj" />
+    <Project Path="samples/TypeSafe.Sample.ToolExpansion/TypeSafe.Sample.ToolExpansion.csproj" />
+    <Project Path="samples/TypeSafe.Sample.ChatWithSql/TypeSafe.Sample.ChatWithSql.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TypeSafe.AI.AgentFramework.Tests/TypeSafe.AI.AgentFramework.Tests.csproj" />
+  </Folder>
+</Solution>

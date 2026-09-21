@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <Authors>TypeSafe .NET Contributors</Authors>
+    <Description>Microsoft Agent Framework integration for TypeSafe AI.</Description>
+    <Deterministic>true</Deterministic>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/typesafe-sdk-csharp/typesafe-agent-framework</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryType>git</RepositoryType>
+    <!-- By default, projects in this repo are not packable unless explicitly enabled -->
+    <IsPackable>false</IsPackable>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <!-- Zero-reflection / NativeAOT policy: AOT analyzers run on every shippable project.
+         Test projects opt out (they legitimately reflect) via IsAotCompatible=false. -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+    <MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+</Project>
